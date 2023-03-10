@@ -13,7 +13,7 @@ namespace Entities.Models
         public string Title { get; set; } 
         public string Content { get; set; }
         public bool? IsActive { get; set; }
-        public int AuthorId { get; set; }
+        public int UserId { get; set; }
         public int CategoryId { get; set; }
     }
 }

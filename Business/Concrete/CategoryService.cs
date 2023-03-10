@@ -1,4 +1,5 @@
 ﻿using Business.Interfaces;
+using Core.Services.Logs.Interfaces;
 using Core.Services.Results;
 using Core.Services.Results.Interfaces;
 using DataAccess.Interfaces;
@@ -12,13 +13,15 @@ using System.Threading.Tasks;
 
 namespace Business.Concrete
 {
-    internal class CategoryService : ICategoryService
+    public class CategoryService : ICategoryService
     {
         private readonly ICategoryRepository _categoryRepository;
+        private readonly ILoggerService _loggerService;
 
-        public CategoryService(ICategoryRepository categoryRepository)
+        public CategoryService(ICategoryRepository categoryRepository, ILoggerService loggerService)
         {
             _categoryRepository = categoryRepository;
+            _loggerService = loggerService;
         }
 
         public IResult Add(Category category)
@@ -45,7 +48,7 @@ namespace Business.Concrete
                 return new ErrorResult(false, "");
         }
 
-        public IDataResult<Category> Get(int categoryId)
+        public IDataResult<Category> GetById(int categoryId)
         {
             var category = _categoryRepository.Get(n => n.Id == categoryId);
             if (category != null)

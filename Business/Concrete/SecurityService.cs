@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Business.Interfaces;
+using Core.Services.Logs.Interfaces;
 using Core.Services.Results;
 using Core.Services.Results.Interfaces;
 using Core.Services.Security.Hash;
@@ -21,38 +22,47 @@ namespace Business.Concrete
         private readonly IUserRepository _userRepository;
         private readonly IJwtService _jwtService;
         private readonly IMapper _mapper;
+        private readonly ILoggerService _loggerService;
 
-        public SecurityService(IUserRepository userRepository, IJwtService jwtService, IMapper mapper)
+        public SecurityService(IUserRepository userRepository, IJwtService jwtService, IMapper mapper, ILoggerService loggerService)
         {
             _userRepository = userRepository;
             _jwtService = jwtService;
             _mapper = mapper;
+            _loggerService = loggerService;
         }
 
-        public IDataResult<User> Login(UserLoginDto userSignInModel)
+        public IDataResult<JwtToken> Login(UserLoginDto userSignInModel)
         {
             var user = _userRepository.GetByUserName(userSignInModel.UserName);
             if (user == null)
-                return new ErrorDataResult<User>(false, "Kullanıcı bulunamadı", user);
+                return new ErrorDataResult<JwtToken>(false, "Kullanıcı bulunamadı", null);
             if (!HashService.VerifyPassword(userSignInModel.Password, user.PasswordHash, user.PasswordSalt))
-                return new ErrorDataResult<User>(false, "Şifre hatalı", user);
-            return new SuccessDataResult<User>(true, "Giriş başarılı", user);
-
+                return new ErrorDataResult<JwtToken>(false, "Şifre hatalı", null);
+            var token = CreateAccessToken(user);
+            return new SuccessDataResult<JwtToken>(true, "Giriş başarılı", token);
+            
         }
 
-        public IDataResult<User> SignUp(UserSignUpDto userSignUpModel, string password)
+        public IDataResult<User> SignUp(UserSignUpDto userSignUpModel)
         {
-            HashService.CreateHash(password, out byte[] passwordHash, out byte[] passwordSalt);
-            var user = _mapper.Map<User>(userSignUpModel);
-            user.PasswordHash = passwordHash;
-            user.PasswordSalt = passwordSalt;
+            HashService.CreateHash(userSignUpModel.Password, out byte[] passwordHash, out byte[] passwordSalt);
+            //var user = _mapper.Map<User>(userSignUpModel);
+            var user = new User
+            {
+                UserName = userSignUpModel.UserName,
+                PasswordHash = passwordHash,
+                PasswordSalt = passwordSalt,
+                Email = userSignUpModel.Email
+            };
+            //user.PasswordHash = passwordHash;
+            //user.PasswordSalt = passwordSalt;
             _userRepository.Add(user);
             return new SuccessDataResult<User>(true, "", user);
         }
-        public IDataResult<JwtToken> CreateAccessToken(User user)
+        public JwtToken CreateAccessToken(User user)
         {
-            var jwtToken = _jwtService.GenerateJwtToken(user);
-            return new SuccessDataResult<JwtToken>(true,"",jwtToken);
+            return _jwtService.GenerateJwtToken(user);
         }
     }
 }

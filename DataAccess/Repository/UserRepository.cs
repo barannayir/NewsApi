@@ -1,4 +1,5 @@
-﻿using DataAccess.Data;
+﻿using Core.Services.Logs.Interfaces;
+using DataAccess.Data;
 using DataAccess.Interfaces;
 using Entities.Models;
 using System;
@@ -11,13 +12,13 @@ namespace DataAccess.Repository
 {
     public class UserRepository : GenericRepository<User, NewsDbContext>, IUserRepository
     {
-        public UserRepository(NewsDbContext context) : base(context)
+        public UserRepository(NewsDbContext context, ILoggerService loggerService) : base(context, loggerService)
         {
         }
 
         public User GetByUserName(string userName)
         {
-            throw new NotImplementedException();
+            return _context.Users.FirstOrDefault(n => n.UserName == userName);
         }
     }
    

@@ -1,4 +1,5 @@
 ﻿using Business.Interfaces;
+using Core.Services.Logs.Interfaces;
 using Core.Services.Results;
 using Core.Services.Results.Interfaces;
 using DataAccess.Interfaces;
@@ -14,12 +15,14 @@ namespace Business.Concrete
     public class NewsService : INewsService
     {
         private readonly INewsRepository _newsRepository;
+        private readonly ILoggerService _loggerService;
 
-        public NewsService(INewsRepository newsRepository)
+        public NewsService(INewsRepository newsRepository, ILoggerService loggerService)
         {
             _newsRepository = newsRepository;
+            _loggerService = loggerService;
         }
-        
+
         public IDataResult<News> GetById(int id)
         {
             var news = _newsRepository.Get(n => n.Id == id);
@@ -69,6 +72,18 @@ namespace Business.Concrete
             if (isExsist != null)
             {
                 _newsRepository.Delete(news);
+                return new SuccessResult(true, "");
+            }
+            else
+                return new ErrorResult(false, "");
+        }
+
+        public IResult DeleteById(int id)
+        {
+            var isExsist = _newsRepository.Get(n => n.Id == id);
+            if (isExsist != null)
+            {
+                _newsRepository.Delete(isExsist);
                 return new SuccessResult(true, "");
             }
             else

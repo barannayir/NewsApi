@@ -10,13 +10,13 @@ namespace DataAccess.Data
 {
     public class NewsDbContext : DbContext
     {
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(connectionString: @"Server=BARAN\SQLEXPRESS;Database=AcerPro2;Trusted_Connection=True;Connect Timeout=30;MultipleActiveResultSets=True;TrustServerCertificate=true");
+            optionsBuilder.UseSqlServer(connectionString: @"Server=BARAN\SQLEXPRESS;Database=;Trusted_Connection=True;Connect Timeout=30;MultipleActiveResultSets=True;TrustServerCertificate=true");
         }
         public DbSet<News> News { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<User> Users { get; set; }
     }
 }
+ 

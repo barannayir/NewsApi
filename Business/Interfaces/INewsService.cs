@@ -16,6 +16,7 @@ namespace Business.Interfaces
         IResult Add(News news);
         IResult Update(News news);
         IResult Delete(News news);
+        IResult DeleteById(int id);
         IResult ChangeStatus(News news);
     }
 }

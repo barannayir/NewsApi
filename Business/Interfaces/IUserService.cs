@@ -1,4 +1,5 @@
 ﻿using Core.Services.Results.Interfaces;
+using Entities.Dtos;
 using Entities.Models;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,6 @@ namespace Business.Interfaces
         IResult Delete(User user);
         IDataResult<User> GetByUserName(string userName);
         IDataResult<User> GetByUserId(int userId);
-        IDataResult<List<User>> GetAll();
+        IDataResult<List<UserDto>> GetAll();
     }
 }

@@ -10,7 +10,7 @@ namespace Business.Interfaces
 {
     public interface ICategoryService
     {
-        IDataResult<Category> Get(int categoryId);
+        IDataResult<Category> GetById(int categoryId);
         IDataResult<List<Category>> GetAll();
         IResult Add(Category category);
         IResult Update(Category category);

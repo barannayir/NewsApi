@@ -1,4 +1,5 @@
-﻿using DataAccess.Data;
+﻿using Core.Services.Logs.Interfaces;
+using DataAccess.Data;
 using DataAccess.Interfaces;
 using Entities.Models;
 using System;
@@ -11,7 +12,7 @@ namespace DataAccess.Repository
 {
     public class NewsRepository : GenericRepository<News, NewsDbContext>, INewsRepository
     {
-        public NewsRepository(NewsDbContext context) : base(context)
+        public NewsRepository(NewsDbContext context, ILoggerService loggerService) : base(context, loggerService)
         {
         }
         

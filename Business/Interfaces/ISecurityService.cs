@@ -12,10 +12,10 @@ namespace Business.Interfaces
 {
     public interface ISecurityService
     {
-        IDataResult<User> SignUp(UserSignUpDto userSignUpModel, string password);
+        IDataResult<User> SignUp(UserSignUpDto userSignUpModel);
 
-        IDataResult<User> Login(UserLoginDto userSignInModel);
-        IDataResult<JwtToken> CreateAccessToken(User user);
+        IDataResult<JwtToken> Login(UserLoginDto userSignInModel);
+        JwtToken CreateAccessToken(User user);
 
 
     }

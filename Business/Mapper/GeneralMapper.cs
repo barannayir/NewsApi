@@ -10,10 +10,14 @@ namespace Business.Mapper
 {
     public class GeneralMapper : Profile
     {
+        
         public GeneralMapper()
         {
             CreateMap<UserLoginDto, User>();
-            CreateMap<UserSignUpDto, User>();
+            CreateMap<UserSignUpDto, User>().ForMember(dest => dest.PasswordSalt, opt=> opt.Ignore()).ForMember(dest => dest.PasswordHash, opt => opt.Ignore());
+            CreateMap<User, UserDto>()
+           .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.UserName))
+           .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email));
         }
     }
 }

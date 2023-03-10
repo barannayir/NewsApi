@@ -1,8 +1,11 @@
-﻿using Business.Interfaces;
+﻿using AutoMapper;
+using Business.Interfaces;
+using Core.Services.Logs.Interfaces;
 using Core.Services.Results;
 using Core.Services.Results.Interfaces;
 using DataAccess.Interfaces;
 using DataAccess.Repository;
+using Entities.Dtos;
 using Entities.Models;
 using System;
 using System.Collections.Generic;
@@ -15,10 +18,14 @@ namespace Business.Concrete
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly ILoggerService _loggerService;
+        private readonly IMapper _mapper;
 
-        public UserService(IUserRepository userRepository)
+        public UserService(IUserRepository userRepository, ILoggerService loggerService, IMapper mapper)
         {
             _userRepository = userRepository;
+            _loggerService = loggerService;
+            _mapper = mapper;
         }
 
         public IResult Add(User user)
@@ -45,9 +52,13 @@ namespace Business.Concrete
                 return new ErrorResult(false, "");
         }
 
-        public IDataResult<List<User>> GetAll()
+        public IDataResult<List<UserDto>> GetAll()
         {
-            return new SuccessDataResult<List<User>>(true, "", _userRepository.GetAll());
+            //var users = _userRepository.GetAll();
+            //return new SuccessDataResult<List<User>>(true, "", users);
+            var users = _userRepository.GetAll();
+            var userDtos = _mapper.Map<List<UserDto>>(users);
+            return new SuccessDataResult<List<UserDto>>(true, "", userDtos);
         }
 
         public IDataResult<User> GetByUserId(int userId)

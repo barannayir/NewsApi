@@ -1,5 +1,7 @@
 ﻿using Core.Services.Security.Jwt.Interfaces;
 using Entities.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -14,12 +16,16 @@ namespace Core.Services.Security.Jwt
 {
     public class JwtService : IJwtService
     {
+        public IConfiguration Configuration { get; }
         private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler;
+        private readonly TokenConfigurations _tokenConfigurations;
         private readonly JwtOptions _options;
 
-        public JwtService(IOptions<JwtOptions> options)
+        public JwtService(IConfiguration configuration, TokenConfigurations tokenConfigurations )
         {
-            _options = options.Value;
+            Configuration = configuration;
+            _tokenConfigurations = tokenConfigurations;
+            _options = Configuration.GetSection("JwtOptions").Get<JwtOptions>();
             _jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
         }
 
@@ -39,10 +45,11 @@ namespace Core.Services.Security.Jwt
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
+                audience: _options.Audience,
                 issuer: _options.Issuer,
                 claims: claims,
                 expires: DateTime.Now.AddMinutes(_options.ExpirationInMinutes),
-                signingCredentials: credentials
+                signingCredentials: _tokenConfigurations.SigningCredentials
             );
 
             return new JwtToken
