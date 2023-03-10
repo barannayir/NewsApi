@@ -21,9 +21,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 
-//var config = new MapperConfiguration(cfg => cfg.AddProfile<GeneralMapper>());
-//var mapper = new Mapper(config);
-builder.Services.AddAutoMapper(typeof(Program));
+
+builder.Services.AddAutoMapper(typeof(GeneralMapper));
+var config = new MapperConfiguration(cfg => cfg.AddProfile<GeneralMapper>());
+var mapper = new Mapper(config);
+
 builder.Services.AddScoped<INewsService, NewsService>();
 builder.Services.AddScoped<INewsRepository, NewsRepository>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();

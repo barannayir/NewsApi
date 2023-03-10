@@ -30,7 +30,6 @@ namespace NewsApi.Controllers
                 return BadRequest(result);
         }
 
-        [AllowAnonymous]
         [HttpGet("getall")]
         public IActionResult GetAll()
         {
@@ -39,6 +38,17 @@ namespace NewsApi.Controllers
                     return Ok(result);
 
                 return BadRequest(result);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("getallactivenews")]
+        public IActionResult GetAllActiveNews()
+        {
+            var result = _newsService.GetAllActiveNews();
+            if (result.IsSuccess)
+                return Ok(result);
+
+            return BadRequest(result);
         }
 
         [AllowAnonymous]

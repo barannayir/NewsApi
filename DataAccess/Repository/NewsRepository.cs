@@ -1,7 +1,9 @@
 ﻿using Core.Services.Logs.Interfaces;
 using DataAccess.Data;
 using DataAccess.Interfaces;
+using Entities.Abstract;
 using Entities.Models;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +18,11 @@ namespace DataAccess.Repository
         {
         }
         
- 
+        public List<News> GetByAuthorId(int userId)
+        {
+            return _context.News.Where(n => n.UserId == userId).ToList();
+        }
+
+
     }
 }

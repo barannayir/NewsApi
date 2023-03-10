@@ -5,6 +5,7 @@ using Core.Services.Results;
 using Core.Services.Results.Interfaces;
 using DataAccess.Interfaces;
 using DataAccess.Repository;
+using Entities.Abstract;
 using Entities.Dtos;
 using Entities.Models;
 using System;
@@ -52,31 +53,45 @@ namespace Business.Concrete
                 return new ErrorResult(false, "");
         }
 
+        //public IDataResult<List<User>> GetAll()
+        //{
+        //    var users = _userRepository.GetAll();
+        //    return new SuccessDataResult<List<User>>(true, "", users);
+        //    //var users = _userRepository.GetAll();
+        //    //var userDtos = _mapper.Map<UserDto>(users);
+        //    //return new SuccessDataResult<List<UserDto>>(true, "", users);
+        //}
+
         public IDataResult<List<UserDto>> GetAll()
         {
-            //var users = _userRepository.GetAll();
-            //return new SuccessDataResult<List<User>>(true, "", users);
             var users = _userRepository.GetAll();
             var userDtos = _mapper.Map<List<UserDto>>(users);
+
             return new SuccessDataResult<List<UserDto>>(true, "", userDtos);
         }
 
-        public IDataResult<User> GetByUserId(int userId)
+        public IDataResult<UserDto> GetByUserId(int userId)
         {
             var user = _userRepository.Get(n => n.Id == userId);
             if (user != null)
-                return new SuccessDataResult<User>(true, "", user);
+            {
+                var userDto = _mapper.Map<UserDto>(user);
+                return new SuccessDataResult<UserDto>(true, "", userDto);
+            }
             else
-                return new ErrorDataResult<User>(false, "", user);
+                return new ErrorDataResult<UserDto>(false, "", null);
         }
 
-        public IDataResult<User> GetByUserName(string userName)
+        public IDataResult<UserDto> GetByUserName(string userName)
         {
             var user = _userRepository.Get(n => n.UserName == userName);
             if (user != null)
-                return new SuccessDataResult<User>(true, "", user);
+            {
+                var userDto = _mapper.Map<UserDto>(user);
+                return new SuccessDataResult<UserDto>(true, "", userDto);
+            }
             else
-                return new ErrorDataResult<User>(false, "", user);
+                return new ErrorDataResult<UserDto>(false, "", null);
         }
 
         public IResult Update(User user)

@@ -12,7 +12,7 @@ namespace DataAccess.Data
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(connectionString: @"Server=BARAN\SQLEXPRESS;Database=;Trusted_Connection=True;Connect Timeout=30;MultipleActiveResultSets=True;TrustServerCertificate=true");
+            optionsBuilder.UseSqlServer(connectionString: @"Server=BARAN\SQLEXPRESS;Database=NewsApi;Trusted_Connection=True;Connect Timeout=30;MultipleActiveResultSets=True;TrustServerCertificate=true");
         }
         public DbSet<News> News { get; set; }
         public DbSet<Category> Categories { get; set; }

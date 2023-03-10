@@ -46,18 +46,10 @@ namespace Business.Concrete
 
         public IDataResult<User> SignUp(UserSignUpDto userSignUpModel)
         {
-            HashService.CreateHash(userSignUpModel.Password, out byte[] passwordHash, out byte[] passwordSalt);
-            //var user = _mapper.Map<User>(userSignUpModel);
-            var user = new User
-            {
-                UserName = userSignUpModel.UserName,
-                PasswordHash = passwordHash,
-                PasswordSalt = passwordSalt,
-                Email = userSignUpModel.Email
-            };
-            //user.PasswordHash = passwordHash;
-            //user.PasswordSalt = passwordSalt;
-            _userRepository.Add(user);
+            var isUserExist = _userRepository.GetByUserName(userSignUpModel.UserName);
+            if (isUserExist != null)
+                return new ErrorDataResult<User>(false, "Kullanıcı adı kullanılıyor", null);
+            var user = _mapper.Map<User>(userSignUpModel);
             return new SuccessDataResult<User>(true, "", user);
         }
         public JwtToken CreateAccessToken(User user)

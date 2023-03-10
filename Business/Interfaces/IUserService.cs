@@ -14,8 +14,8 @@ namespace Business.Interfaces
         IResult Add(User user);
         IResult Update(User user);
         IResult Delete(User user);
-        IDataResult<User> GetByUserName(string userName);
-        IDataResult<User> GetByUserId(int userId);
+        IDataResult<UserDto> GetByUserName(string userName);
+        IDataResult<UserDto> GetByUserId(int userId);
         IDataResult<List<UserDto>> GetAll();
     }
 }

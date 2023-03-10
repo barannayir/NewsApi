@@ -13,6 +13,8 @@ namespace Business.Interfaces
         IDataResult<News> GetById(int id);
         IDataResult<List<News>> GetAll();
         IDataResult<List<News>> GetByCategory(int categoryId);
+
+        IDataResult<List<News>> GetAllActiveNews();
         IResult Add(News news);
         IResult Update(News news);
         IResult Delete(News news);

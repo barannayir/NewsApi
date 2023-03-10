@@ -37,9 +37,14 @@ namespace Business.Concrete
             return new SuccessDataResult<List<News>>(true, "", _newsRepository.GetAll());
         }
 
+        public IDataResult<List<News>> GetAllActiveNews()
+        {
+            return new SuccessDataResult<List<News>>(true, "", _newsRepository.GetAll(x => x.IsActive == true));
+        }
+
         public IDataResult<List<News>> GetByCategory(int categoryId)
         {
-            return new SuccessDataResult<List<News>>(true, "", _newsRepository.GetAll(p => p.CategoryId == categoryId));
+            return new SuccessDataResult<List<News>>(true, "", _newsRepository.GetAll(x => x.CategoryId == categoryId));
         }
 
         public IResult Add(News news)
