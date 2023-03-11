@@ -1,6 +1,9 @@
 ﻿using Core.Services.Logs.Interfaces;
+using Core.Services.Results;
+using Core.Services.Results.Interfaces;
 using DataAccess.Interfaces;
 using Entities.Abstract;
+using Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -25,31 +28,38 @@ namespace DataAccess.Repository
             _context = context;
         }
 
-        public void Add(TEntity entity)
+        public IResult Add(TEntity entity)
         {
             try
             {
                 _context.Set<TEntity>().Add(entity);
                 _context.SaveChanges();
                 _logger.LogInformation($"{typeof(TEntity).Name} added to database.");
+                return new SuccessResult(true, LogMessage<TEntity>.Add);
             }
             catch (Exception ex)
             {
                 _logger.LogWarning($"Error while adding {typeof(TEntity).Name} to database: {ex.Message}");
+                return new ErrorResult(false, LogMessage<TEntity>.AddError);
+
             }
         }
 
-        public void Delete(TEntity entity)
+        public IResult Delete(TEntity entity)
         {
             try
             {
-                _context.Set<TEntity>().Remove(entity);
+                var existingEntity = _context.Set<TEntity>().Find(entity.Id);
+                _context.Set<TEntity>().Remove(existingEntity);
                 _context.SaveChanges();
                 _logger.LogInformation($"{typeof(TEntity).Name} deleted from database.");
+                return new SuccessResult(true, LogMessage<TEntity>.Delete);
             }
             catch (Exception ex)
             {
                 _logger.LogWarning($"Error while deleting {typeof(TEntity).Name} from database: {ex.Message}");
+                return new ErrorResult(false, LogMessage<TEntity>.DeleteError);
+
             }
         }
 
@@ -79,17 +89,26 @@ namespace DataAccess.Repository
             }
         }
 
-        public void Update(TEntity entity)
+        public IResult Update(TEntity entity)
         {
             try
             {
-                _context.Entry(entity).State = EntityState.Modified;
-                _context.SaveChanges();
+                var existingEntity = _context.Set<TEntity>().Find(entity.Id);
+                if (existingEntity != null)
+                {
+                    _context.Entry(existingEntity).CurrentValues.SetValues(entity);
+                    _context.SaveChanges();
                 _logger.LogInformation($"{typeof(TEntity).Name} updated in database.");
+                return new SuccessResult(true, LogMessage<TEntity>.Update);
+                }
+                return new ErrorResult(false, LogMessage<TEntity>.UpdateError);
+
             }
             catch (Exception ex)
             {
                 _logger.LogWarning($"Error while updating {typeof(TEntity).Name} in database: {ex.Message}");
+                return new ErrorResult(false, LogMessage<TEntity>.UpdateError);
+
             }
         }
     }

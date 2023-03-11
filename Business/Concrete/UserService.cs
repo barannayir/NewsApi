@@ -35,10 +35,10 @@ namespace Business.Concrete
             if (isExsist == null)
             {
                 _userRepository.Add(user);
-                return new SuccessResult(true, "");
+                return new SuccessResult(true, LogMessage<User>.Add);
             }
             else
-                return new ErrorResult(false, "");
+                return new ErrorResult(false, LogMessage<User>.AddError);
         }
 
         public IResult Delete(User user)
@@ -47,10 +47,10 @@ namespace Business.Concrete
             if (isExsist != null)
             {
                 _userRepository.Delete(user);
-                return new SuccessResult(true, "");
+                return new SuccessResult(true, LogMessage<User>.Delete);
             }
             else
-                return new ErrorResult(false, "");
+                return new ErrorResult(false, LogMessage<User>.DeleteError);
         }
 
         //public IDataResult<List<User>> GetAll()
@@ -67,7 +67,7 @@ namespace Business.Concrete
             var users = _userRepository.GetAll();
             var userDtos = _mapper.Map<List<UserDto>>(users);
 
-            return new SuccessDataResult<List<UserDto>>(true, "", userDtos);
+            return new SuccessDataResult<List<UserDto>>(true, LogMessage<User>.GetAll, userDtos);
         }
 
         public IDataResult<UserDto> GetByUserId(int userId)
@@ -76,10 +76,10 @@ namespace Business.Concrete
             if (user != null)
             {
                 var userDto = _mapper.Map<UserDto>(user);
-                return new SuccessDataResult<UserDto>(true, "", userDto);
+                return new SuccessDataResult<UserDto>(true, LogMessage<User>.Get, userDto);
             }
             else
-                return new ErrorDataResult<UserDto>(false, "", null);
+                return new ErrorDataResult<UserDto>(false, LogMessage<User>.GetError, null);
         }
 
         public IDataResult<UserDto> GetByUserName(string userName)
@@ -88,10 +88,10 @@ namespace Business.Concrete
             if (user != null)
             {
                 var userDto = _mapper.Map<UserDto>(user);
-                return new SuccessDataResult<UserDto>(true, "", userDto);
+                return new SuccessDataResult<UserDto>(true, LogMessage<User>.Get, userDto);
             }
             else
-                return new ErrorDataResult<UserDto>(false, "", null);
+                return new ErrorDataResult<UserDto>(false, LogMessage<User>.GetError, null);
         }
 
         public IResult Update(User user)
@@ -100,10 +100,10 @@ namespace Business.Concrete
             if (isExsist != null)
             {
                 _userRepository.Update(user);
-                return new SuccessResult(true, "");
+                return new SuccessResult(true, LogMessage<User>.Update);
             }
             else
-                return new ErrorResult(false, "");
+                return new ErrorResult(false, LogMessage<User>.UpdateError);
         }
     }
 }

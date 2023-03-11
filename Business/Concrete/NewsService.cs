@@ -27,24 +27,24 @@ namespace Business.Concrete
         {
             var news = _newsRepository.Get(n => n.Id == id);
             if (news != null)
-                return new SuccessDataResult<News>(true, "", news);
+                return new SuccessDataResult<News>(true, LogMessage<News>.Get, news);
             else
-                return new ErrorDataResult<News>(false, "", news);
+                return new ErrorDataResult<News>(false, LogMessage<News>.GetError, null);
         }
 
         public IDataResult<List<News>> GetAll()
         {
-            return new SuccessDataResult<List<News>>(true, "", _newsRepository.GetAll());
+            return new SuccessDataResult<List<News>>(true, LogMessage<News>.GetAll, _newsRepository.GetAll());
         }
 
         public IDataResult<List<News>> GetAllActiveNews()
         {
-            return new SuccessDataResult<List<News>>(true, "", _newsRepository.GetAll(x => x.IsActive == true));
+            return new SuccessDataResult<List<News>>(true, LogMessage<News>.GetAll, _newsRepository.GetAll(x => x.IsActive == true));
         }
 
         public IDataResult<List<News>> GetByCategory(int categoryId)
         {
-            return new SuccessDataResult<List<News>>(true, "", _newsRepository.GetAll(x => x.CategoryId == categoryId));
+            return new SuccessDataResult<List<News>>(true, LogMessage<News>.GetAll, _newsRepository.GetAll(x => x.CategoryId == categoryId));
         }
 
         public IResult Add(News news)
@@ -53,10 +53,10 @@ namespace Business.Concrete
             if (isExsist == null)
             {
                 _newsRepository.Add(news);
-                return new SuccessResult(true, "");
+                return new SuccessResult(true, LogMessage<News>.Add);
             }
             else
-                return new ErrorResult(false, "");
+                return new ErrorResult(false, LogMessage<News>.AddError);
         }
 
         public IResult Update(News news)
@@ -65,10 +65,10 @@ namespace Business.Concrete
             if (isExsist != null)
             {
                 _newsRepository.Update(news);
-                return new SuccessResult(true, "");
+                return new SuccessResult(true, LogMessage<News>.Update);
             }
             else
-                return new ErrorResult(false, "");
+                return new ErrorResult(false, LogMessage<News>.UpdateError);
         }
 
         public IResult Delete(News news)
@@ -76,11 +76,11 @@ namespace Business.Concrete
             var isExsist = _newsRepository.Get(n => n.Id == news.Id);
             if (isExsist != null)
             {
-                _newsRepository.Delete(news);
-                return new SuccessResult(true, "");
+                var result = _newsRepository.Delete(news);
+                return new SuccessResult(true, LogMessage<News>.Delete);
             }
             else
-                return new ErrorResult(false, "");
+                return new ErrorResult(false, LogMessage<News>.DeleteError);
         }
 
         public IResult DeleteById(int id)
@@ -89,10 +89,10 @@ namespace Business.Concrete
             if (isExsist != null)
             {
                 _newsRepository.Delete(isExsist);
-                return new SuccessResult(true, "");
+                return new SuccessResult(true, LogMessage<News>.Delete);
             }
             else
-                return new ErrorResult(false, "");
+                return new ErrorResult(false, LogMessage<News>.DeleteError);
         }
 
         public IResult ChangeStatus(News news)
@@ -100,15 +100,11 @@ namespace Business.Concrete
             var isExsist = _newsRepository.Get(n => n.Id == news.Id);
             if (isExsist != null)
             {
-                if (news.IsActive == true)
-                    news.IsActive = false;
-                else news.IsActive = true;
-                
                 _newsRepository.Update(news);
-                return new SuccessResult(true, "");
+                return new SuccessResult(true, LogMessage<News>.Update);
             }
             else
-                return new ErrorResult(false, "");
+                return new ErrorResult(false, LogMessage<News>.UpdateError);
         }
     }
 }

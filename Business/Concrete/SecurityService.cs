@@ -9,11 +9,6 @@ using Core.Services.Security.Jwt.Interfaces;
 using DataAccess.Interfaces;
 using Entities.Dtos;
 using Entities.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Business.Concrete
 {
@@ -36,11 +31,11 @@ namespace Business.Concrete
         {
             var user = _userRepository.GetByUserName(userSignInModel.UserName);
             if (user == null)
-                return new ErrorDataResult<JwtToken>(false, "Kullanıcı bulunamadı", null);
+                return new ErrorDataResult<JwtToken>(false, LogMessage<User>.LoginError, null);
             if (!HashService.VerifyPassword(userSignInModel.Password, user.PasswordHash, user.PasswordSalt))
-                return new ErrorDataResult<JwtToken>(false, "Şifre hatalı", null);
+                return new ErrorDataResult<JwtToken>(false, LogMessage<User>.PasswordError, null);
             var token = CreateAccessToken(user);
-            return new SuccessDataResult<JwtToken>(true, "Giriş başarılı", token);
+            return new SuccessDataResult<JwtToken>(true, LogMessage<User>.Login, token);
             
         }
 
@@ -48,9 +43,10 @@ namespace Business.Concrete
         {
             var isUserExist = _userRepository.GetByUserName(userSignUpModel.UserName);
             if (isUserExist != null)
-                return new ErrorDataResult<User>(false, "Kullanıcı adı kullanılıyor", null);
+                return new ErrorDataResult<User>(false, LogMessage<User>.UserExists, null);
             var user = _mapper.Map<User>(userSignUpModel);
-            return new SuccessDataResult<User>(true, "", user);
+            _userRepository.Add(user);
+            return new SuccessDataResult<User>(true, LogMessage<User>.Register, user);
         }
         public JwtToken CreateAccessToken(User user)
         {

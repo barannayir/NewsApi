@@ -1,4 +1,5 @@
-﻿using Entities.Abstract;
+﻿using Core.Services.Results.Interfaces;
+using Entities.Abstract;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,8 +14,8 @@ namespace DataAccess.Interfaces
         T Get(Expression<Func<T, bool>> filter);
         List<T> GetAll(Expression<Func<T, bool>> filter = null);
 
-        void Add(T entity);
-        void Update(T entity);
-        void Delete(T entity);
+        IResult Add(T entity);
+        IResult Update(T entity);
+        IResult Delete(T entity);
     }
 }
