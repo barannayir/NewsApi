@@ -76,7 +76,7 @@ namespace DataAccess.Repository
             }
         }
 
-        public List<TEntity> GetAll(Expression<Func<TEntity, bool>> filter = null)
+        public List<TEntity> GetAll(Expression<Func<TEntity, bool>> filter)
         {
             try
             {

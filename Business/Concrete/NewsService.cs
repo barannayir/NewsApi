@@ -39,7 +39,8 @@ namespace Business.Concrete
 
         public IDataResult<List<News>> GetAllActiveNews()
         {
-            return new SuccessDataResult<List<News>>(true, LogMessage<News>.GetAll, _newsRepository.GetAll(x => x.IsActive == true));
+            var activeNews = _newsRepository.GetActiveNews();
+            return new SuccessDataResult<List<News>>(true, LogMessage<News>.GetAll, activeNews);
         }
 
         public IDataResult<List<News>> GetByCategory(int categoryId)

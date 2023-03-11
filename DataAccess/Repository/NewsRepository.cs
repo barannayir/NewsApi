@@ -23,6 +23,10 @@ namespace DataAccess.Repository
             return _context.News.Where(n => n.UserId == userId).ToList();
         }
 
+        public List<News> GetActiveNews()
+        {
+            return _context.News.Where(n => n.IsActive == true).ToList();
+        }
 
     }
 }

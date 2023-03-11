@@ -9,6 +9,7 @@ namespace DataAccess.Interfaces
 {
     public interface INewsRepository : IEntityRepository<News>
     {
-        
+        List<News> GetActiveNews();
+        List<News> GetByAuthorId(int userId);
     }
 }
